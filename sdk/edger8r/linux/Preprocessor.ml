@@ -41,13 +41,12 @@ module Bytes = String
 let read_process (command : string) : Unix.process_status * string =
   let buffer_size = 2048 in
   let buffer = Buffer.create buffer_size in
-  let str = Bytes.make buffer_size in
-  let in_channel = Unix.open_process_in command in
+  let bytes = Bytes.create buffer_size in
   let chars_read = ref 1 in
   while !chars_read <> 0 do
-    let str = Bytes.make buffer_size '\000' in
-    chars_read := input in_channel str 0 buffer_size;
-    Buffer.add_substring buffer (Bytes.to_string str) 0 !chars_read;
+    chars_read := input in_channel bytes 0 buffer_size;
+    if !chars_read > 0 then
+      Buffer.add_substring buffer (Bytes.sub_string bytes 0 !chars_read) 0 !chars_read;
   done;
   let status = Unix.close_process_in in_channel in
   let output = Buffer.contents buffer in
