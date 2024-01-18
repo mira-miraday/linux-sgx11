@@ -45,6 +45,7 @@ let read_process (command : string) : Unix.process_status * string =
   let in_channel = Unix.open_process_in command in
   let chars_read = ref 1 in
   while !chars_read <> 0 do
+    let str = Bytes.create buffer_size in
     chars_read := input in_channel str 0 buffer_size;
     Buffer.add_substring buffer (String.string_of_bytes str) 0 !chars_read
   done;
