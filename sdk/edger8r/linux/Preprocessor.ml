@@ -41,16 +41,17 @@ module Bytes = String
 let read_process (command : string) : Unix.process_status * string =
   let buffer_size = 2048 in
   let buffer = Buffer.create buffer_size in
-  let bytes = Bytes.make buffer_size in
+  let bytes = Bytes.make buffer_size '\000' in
+  let in_channel = Unix.open_process_in command in
   let chars_read = ref 1 in
   while !chars_read <> 0 do
     chars_read := input in_channel bytes 0 buffer_size;
     if !chars_read > 0 then
-      Buffer.add_substring buffer (Bytes.sub_string bytes 0 !chars_read) 0 !chars_read;
+      Buffer.add_substring buffer (Bytes.sub bytes 0 !chars_read) 0 !chars_read;
   done;
   let status = Unix.close_process_in in_channel in
   let output = Buffer.contents buffer in
-  ( status, output )
+  (status, output)
 
 (*Return None if gcc not found, caller should handle it*)
 let processor_macro ( full_path : string) : string option=
