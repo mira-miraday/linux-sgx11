@@ -114,7 +114,7 @@ let rec parse_cmdline (progname: string) (cmdargs: string list) =
     match args with
         [] -> ()
       | op :: ops ->
-          match String.lowercase_ascii op with
+          match String.lowercase op with
               "--use-prefix" -> use_pref := true; local_parser ops
             | "--header-only"-> hd_only := true; local_parser ops
             | "--untrusted"  -> untrusted := true; local_parser ops
@@ -191,9 +191,9 @@ let isalnum c = isdigit c || isalpha c
 
 let str_map f s =
   let len = String.length s in
-  let res = Bytes.create len in
+  let res = String.create len in
     for i = 0 to len - 1 do
-      Bytes.set res i (f (String.get s i))
+      String.set res i (f (String.get s i))
     done;
   res
 
@@ -223,7 +223,7 @@ let to_c_identifier (s: string) =
   let rest_str =
     String.sub s 1 (String.length s - 1)
   in
-    Char.escaped first_ch ^ Bytes.to_string (str_map convert_char rest_str)
+    Char.escaped first_ch ^ str_map convert_char rest_str
 
 
 (* Check whether given string is a valid C identifier.
