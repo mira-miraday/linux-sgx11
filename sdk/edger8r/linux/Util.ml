@@ -223,7 +223,7 @@ let to_c_identifier (s: string) =
   let rest_str =
     String.sub s 1 (String.length s - 1)
   in
-    Char.escaped first_ch ^ str_map convert_char rest_str
+    Char.escaped first_ch ^ Bytes.to_string (str_map convert_char rest_str)
 
 
 (* Check whether given string is a valid C identifier.
