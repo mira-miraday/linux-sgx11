@@ -32,10 +32,8 @@
 open Unix
 open Printf
 
+(* Util module might be needed here *)
 open Util
-
-(* for compat of OCaml before version 4.02.0 *)
-module Bytes = String
 
 (* Run a command and return its results as a process_status*string. *)
 let read_process (command : string) : Unix.process_status * string =
@@ -53,20 +51,21 @@ let read_process (command : string) : Unix.process_status * string =
   let output = Buffer.contents buffer in
   (status, output)
 
-(*Return None if gcc not found, caller should handle it*)
-let processor_macro ( full_path : string) : string option=
+(* Return None if gcc not found, caller should handle it *)
+let processor_macro (full_path : string) : string option =
   let gcc_path = snd (read_process "which gcc") in
-  if not (String.contains gcc_path  '/' ) then
+  if not (String.contains gcc_path '/') then
     (eprintf "warning: preprocessor is not found\n"; None)
   else
     let command = sprintf "gcc -x c -E -P \"%s\" 2>/dev/null" full_path in
     let output = read_process command in
     match fst output with
-      | WEXITED exit_status -> 
+    | WEXITED exit_status ->
         if exit_status < 0 then
           failwithf "gcc exited with error code 0x%d\n" exit_status
         else if exit_status > 0 then
           failwithf "Preprocessor failed\n"
         else
-          Some(snd output)
-      | _ -> failwithf "Preprocessor stopped by signal\n"  
+          Some (snd output)
+    | _ -> failwithf "Preprocessor stopped by signal\n"
+
