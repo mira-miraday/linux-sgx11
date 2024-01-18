@@ -41,7 +41,7 @@ module Bytes = String
 let read_process (command : string) : Unix.process_status * string =
   let buffer_size = 2048 in
   let buffer = Buffer.create buffer_size in
-  let bytes = Bytes.create buffer_size in
+  let bytes = Bytes.make buffer_size in
   let chars_read = ref 1 in
   while !chars_read <> 0 do
     chars_read := input in_channel bytes 0 buffer_size;
