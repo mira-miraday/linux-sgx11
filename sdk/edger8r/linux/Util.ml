@@ -191,7 +191,7 @@ let isalnum c = isdigit c || isalpha c
 
 let str_map f s =
   let len = String.length s in
-  let res = Bytes.make len in
+  let res = Bytes.create len in
     for i = 0 to len - 1 do
       Bytes.set res i (f (String.get s i))
     done;
